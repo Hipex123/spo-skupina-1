@@ -10,4 +10,4 @@ RUN dx build
 
 EXPOSE 3104
 
-CMD ["dx","serve","-p","3104"]
+CMD ["dx","serve","--port","3104"]
