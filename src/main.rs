@@ -36,9 +36,10 @@ fn Home() -> Element {
                 "Uvod"
             }
             p {
-                "Napake na maticni polsci so lahko kar tezko diagnizicirane.
+                "Napake na maticni polšci so lahko kar tezko diagnizicirane.
                 Ampak ko napako dosezemo je lahko nadlezna.
-                Placeholder text to fill in the blanks."
+                Placeholder text to fill in the blanks.
+                š, Š, č, Č, ž, Ž"
             }
         }
         div {
