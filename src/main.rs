@@ -9,6 +9,9 @@ enum Route {
     Home {},
     #[route("/POST")]
     POST {},
+
+    #[route("/Napake")]
+    Napake {},
 }
 
 fn main() {
@@ -26,31 +29,79 @@ fn App() -> Element {
 }
 
 #[component]
-fn Home() -> Element {
+fn Intro() -> Element {
     rsx!(
         h1 {
-            "Napake na maticni plosci"
+            "Diagnostika/Napake Matične Plošče "
         }
         article {
             h2 {
                 "Uvod"
             }
             p {
-                "Napake na maticni polšci so lahko kar tezko diagnizicirane.
-                Ampak ko napako dosezemo je lahko nadlezna.
-                Placeholder text to fill in the blanks.
-                š, Š, č, Č, ž, Ž"
+                "Matična plošča je ključni del računalnika,
+                ki povezuje vse komponente sistema in zagotavlja njegovo stabilno delovanje.
+                Kljub svoji pomembnosti je pogosto izpostavljena napakam,
+                ki lahko vplivajo na celoten sistem.
+                Diagnostika napak na matični plošči je zapletena,
+                saj vključuje analizo fizičnih in funkcionalnih težav,
+                ki izvirajo iz okvar elektronike, povezav ali mehanskih poškodb.
+                V tej nalogi bomo raziskali vrste napak na matični plošči ter
+                metode njihove diagnostike, z namenom izboljšanja razumevanja
+                in vzdrževanja računalniških sistemov."
             }
         }
+    )
+}
+
+#[component]
+fn Home() -> Element {
+    let mut option = use_signal(|| "".to_string());
+
+    rsx!(div{
+        class:"width-limiter",
+
+        Intro {},
         div {
             h2 {
-                "vec:"
+                "Izberite opcijo:"
             }
-            Link{
-                to: "/POST",
-                "Go to POST"
+            div{
+                class:"input-options",
+                Link{
+                    class: "inputs",
+                    to: "/POST",
+                    "1) POST"
+                }
+                Link{
+                    class: "inputs",
+                    to: "/Napake",
+                    "2) Napake"
+                }
+            }
+            input{
+                    tabindex: 0,
+                    autofocus: true,
+                    value: "{option}",
+                    oninput: move |event| option.set(event.value()),
+                    onkeydown: move |event| {
+    if event.key() == "Enter" {
+        match option().as_str() {
+            "1" => navigator().push("/POST"),
+            "2" => navigator().push("/Napake"),
+            _ => {
+                // Display an error message or set an error state
+                println!("Invalid option entered");
             }
         }
+    }
+}
+            }
+        }
+
+
+
+    }
     )
 }
 
@@ -59,6 +110,16 @@ fn POST() -> Element {
     rsx!(
         div {
             "Hello from POST"
+        }
+    )
+}
+
+
+#[component]
+fn Napake() -> Element {
+    rsx!(
+        div{
+            "hello"
         }
     )
 }
