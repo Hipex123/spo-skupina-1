@@ -2,6 +2,7 @@
 
 use dioxus::prelude::*;
 use dioxus_logger::tracing::{info, Level};
+use log::trace;
 
 #[derive(Clone, Routable, Debug, PartialEq)]
 enum Route {
@@ -26,6 +27,57 @@ fn App() -> Element {
         link { rel: "stylesheet", href: "main.css" }
         Router::<Route> {}
     }
+}
+
+#[component]
+fn Nav() -> Element {
+    let mut option = use_signal(|| "".to_string());
+
+
+    rsx!(div {
+        h2 {
+            "Izberite opcijo:"
+        }
+        div{
+            class:"input-options",
+            Link{
+                class: "inputs",
+                to: "/",
+                "H) Domol"
+            }
+            Link{
+                class: "inputs",
+                to: "/Napake",
+                "1) Napake"
+            }
+            Link{
+                class: "inputs",
+                to: "/POST",
+                "2) POST"
+            }
+        }
+        input{
+            tabindex: 0,
+            autofocus: true,
+            value: "{option}",
+            oninput: move |event| {
+                option.set(event.value().to_string());
+            },
+            onkeydown: move |event: KeyboardEvent| {
+                if event.key() == Key::Enter{
+                    match option().as_str().to_uppercase().as_str() {
+                        "H" => {navigator().push(Route::Home{});},
+                        "1" => {navigator().push(Route::Napake{});},
+                        "2" => {navigator().push(Route::POST{});},
+                        _ => {}
+                    }
+                    option.set("".to_string());
+                }
+            }
+
+        }
+    }
+    )
 }
 
 #[component]
@@ -56,53 +108,14 @@ fn Intro() -> Element {
 
 #[component]
 fn Home() -> Element {
-    let mut option = use_signal(|| "".to_string());
-
     rsx!(div{
         class:"width-limiter",
 
-        Intro {},
-        div {
-            h2 {
-                "Izberite opcijo:"
-            }
-            div{
-                class:"input-options",
-                Link{
-                    class: "inputs",
-                    to: "/POST",
-                    "1) POST"
-                }
-                Link{
-                    class: "inputs",
-                    to: "/Napake",
-                    "2) Napake"
-                }
-            }
-            input{
-                    tabindex: 0,
-                    autofocus: true,
-                    value: "{option}",
-                    oninput: move |event| option.set(event.value()),
-                    onkeydown: move |event| {
-    if event.key() == "Enter" {
-        match option().as_str() {
-            "1" => navigator().push("/POST"),
-            "2" => navigator().push("/Napake"),
-            _ => {
-                // Display an error message or set an error state
-                println!("Invalid option entered");
-            }
+        Intro {}
+        Nav {}
         }
-    }
-}
-            }
-        }
-
-
-
-    }
     )
+
 }
 
 #[component]
@@ -111,6 +124,7 @@ fn POST() -> Element {
         div {
             "Hello from POST"
         }
+        Nav{}
     )
 }
 
@@ -121,5 +135,6 @@ fn Napake() -> Element {
         div{
             "hello"
         }
+        Nav{}
     )
 }
