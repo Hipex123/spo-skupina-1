@@ -34,3 +34,22 @@
     margin-right: 16px;
 }
 
+.terminal-input {
+    position: relative;
+    padding-left: 10px; /* Adjust as needed */
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: white; /* Text color */
+    caret-shape: block;
+}
+.terminal-input span{
+    background-color: hsla(1, 1%, 100%, 1);
+    color: #000;
+}
+
+
+
+.terminal-container {
+    display: flex;
+}

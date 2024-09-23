@@ -56,25 +56,29 @@ fn Nav() -> Element {
                 "2) POST"
             }
         }
-        input{
-            tabindex: 0,
-            autofocus: true,
-            value: "{option}",
-            oninput: move |event| {
-                option.set(event.value().to_string());
-            },
-            onkeydown: move |event: KeyboardEvent| {
-                if event.key() == Key::Enter{
-                    match option().as_str().to_uppercase().as_str() {
-                        "H" => {navigator().push(Route::Home{});},
-                        "1" => {navigator().push(Route::Napake{});},
-                        "2" => {navigator().push(Route::POST{});},
-                        _ => {}
+        div{
+            class: "terminal-container",
+            div{"[gapi@arch ~]$"}
+            input{
+                class:"terminal-input",
+                tabindex: 0,
+                autofocus: true,
+                oninput: move |event| {
+                    option.set(event.value().to_string());
+                },
+                onkeydown: move |event: KeyboardEvent| {
+                    if event.key() == Key::Enter{
+                        match option().as_str().to_uppercase().as_str() {
+                            "H" => {navigator().push(Route::Home{});},
+                            "1" => {navigator().push(Route::Napake{});},
+                            "2" => {navigator().push(Route::POST{});},
+                            _ => {}
+                        }
+                        option.set("".to_string());
                     }
-                    option.set("".to_string());
-                }
+                },
+                span {}
             }
-
         }
     }
     )
