@@ -8,7 +8,7 @@
 
 * {
     background-color: #101010;
-    color: azure;
+    color: white;
     font-family: 'VGA', monospace;
     font-size: 16px; /* Adjust as needed */
     line-height: 1.2; /* Adjust for that tight retro spacing */
@@ -24,6 +24,24 @@
     letter-spacing: 0; /* Make sure letters are tight */
     transform: scale(1); /* Optional, remove any browser default scaling */
     transform-origin: 0 0; /* Ensures scaling is done from the top-left */
+}
+
+strong{
+    color: black;
+    background-color: white;
+}
+h1{
+    color: black;
+    background-color: white;
+    margin-bottom: 0;
+}
+h2{
+    margin-bottom: 0;
+    margin-top: 2em;
+}
+
+.left--spacer{
+    width: 4ex;
 }
 
 .width-limiter{
@@ -48,8 +66,10 @@
     color: #000;
 }
 
-
-
 .terminal-container {
+    display: flex;
+}
+
+.flex{
     display: flex;
 }
