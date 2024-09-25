@@ -2,12 +2,14 @@
 
 use dioxus::prelude::*;
 use dioxus_logger::tracing::{info, Level};
-use log::trace;
+use web_sys::js_sys::Number;
+
 
 #[derive(Clone, Routable, Debug, PartialEq)]
 enum Route {
     #[route("/")]
     Home {},
+
     #[route("/POST")]
     POST {},
 
@@ -16,6 +18,9 @@ enum Route {
 
     #[route("/Diagnostika")]
     Diagnostika {},
+
+    #[route("/SpremeniIme")]
+    SpremeniIme {},
 }
 
 fn main() {
@@ -26,6 +31,7 @@ fn main() {
 }
 
 fn App() -> Element {
+    use_context_provider(|| Signal::new(NameHandler::new()));
     rsx! {
         link { rel: "stylesheet", href: "main.css" }
         Router::<Route> {}
@@ -35,7 +41,8 @@ fn App() -> Element {
 #[component]
 fn Nav() -> Element {
     let mut option = use_signal(|| "".to_string());
-
+    //let name = use_context::<Signal<NameHandler>>()().name;
+    let mut name_handler = use_context::<Signal<NameHandler>>();
 
     rsx!(div {
         h2 {
@@ -50,6 +57,11 @@ fn Nav() -> Element {
             }
             Link{
                 class: "inputs",
+                to: "/",
+                "U) Spremeni ime"
+            }
+            Link{
+                class: "inputs",
                 to: "/Napake",
                 "1) Napake"
             }
@@ -61,7 +73,7 @@ fn Nav() -> Element {
         }
         div{
             class: "terminal-container",
-            div{"[gapi@arch ~]$"}
+            div{"[{name_handler().name}@arch ~]$"}
             input{
                 class:"terminal-input",
                 tabindex: 0,
@@ -71,12 +83,16 @@ fn Nav() -> Element {
                 },
                 onkeydown: move |event: KeyboardEvent| {
                     if event.key() == Key::Enter{
+                        
+
                         match option().as_str().to_uppercase().as_str() {
                             "H" => {navigator().push(Route::Home{});},
+                            "U" => {navigator().push(Route::SpremeniIme{});},
                             "1" => {navigator().push(Route::Napake{});},
                             "2" => {navigator().push(Route::Diagnostika{});},
                             _ => {}
                         }
+
                         option.set("".to_string());
                     }
                 },
@@ -302,5 +318,54 @@ fn Diagnostika() ->  Element{
             }
          }
         Nav{}
+    }
+}
+
+#[component]
+fn SpremeniIme() -> Element {
+    let mut option = use_signal(|| "".to_string());
+    let mut name_handler = use_context::<Signal<NameHandler>>();
+
+    rsx!(div{
+        class:"width-limiter",
+
+
+         div{
+            class: "terminal-container",
+            div{"Novo Ime: "}
+         input{
+                class:"terminal-input",
+                tabindex: 0,
+                autofocus: true,
+                oninput: move |event| {
+                    option.set(event.value().to_string());
+                },
+                onkeydown: move |event: KeyboardEvent| {
+                    if event.key() == Key::Enter{
+                        name_handler.write().name = option();
+                        option.set("".to_string());
+                        navigator().push(Route::Home {});
+                    }
+                },
+                span {}
+            }
+        }
+        }
+    )
+
+}
+
+
+#[derive(Clone)]
+struct NameHandler{
+    name: String,
+    option: String,
+}
+impl NameHandler {
+    fn new() -> Self{
+        Self{
+            name: "user".to_string(),
+            option: "".to_string(),
+        }
     }
 }
