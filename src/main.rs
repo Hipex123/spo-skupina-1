@@ -46,7 +46,7 @@ fn Nav() -> Element {
             Link{
                 class: "inputs",
                 to: "/",
-                "H) Domol"
+                "H) Domov"
             }
             Link{
                 class: "inputs",
@@ -140,6 +140,7 @@ fn POST() -> Element {
 fn Napake() -> Element {
     rsx!(
         div{
+            class:"width-limiter",
             div {
                 h1 { "Možne težave z matično ploščo" }
 
@@ -222,7 +223,7 @@ fn Napake() -> Element {
 fn Diagnostika() ->  Element{
     rsx!{
         div{
-            class:"flex",
+            class:"flex width-limiter",
             div{
                 class:"left-spacer"
             }
