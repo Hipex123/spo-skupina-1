@@ -57,7 +57,7 @@ fn Nav() -> Element {
             }
             Link{
                 class: "inputs",
-                to: "/",
+                to: "/SpremeniIme",
                 "U) Spremeni ime"
             }
             Link{
