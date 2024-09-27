@@ -3,7 +3,7 @@
 use dioxus::prelude::*;
 use dioxus_logger::tracing::{info, Level};
 use web_sys::js_sys::Number;
-
+use manganis::*;
 
 #[derive(Clone, Routable, Debug, PartialEq)]
 enum Route {
@@ -13,14 +13,30 @@ enum Route {
     #[route("/POST")]
     POST {},
 
-    #[route("/Napake")]
-    Napake {},
+    #[nest("/Napake")]
+    #[layout(NapRedir)]
+        #[route("/")]
+        Napake {},
+    #[end_layout]
+    #[end_nest]
 
-    #[route("/Diagnostika")]
-    Diagnostika {},
+
+    #[nest("/Diagnostika")]
+    #[layout(DiagRedir)]
+        #[route("/")]
+        Diagnostika {},
+        #[route("/Basic")]
+        BasicCheck{},
+        #[route("/Test")]
+        Testiranje{},
+        #[route("/BIOS")]
+        BIOS{},
+    #[end_layout]
+    #[end_nest]
 
     #[route("/SpremeniIme")]
     SpremeniIme {},
+
 }
 
 fn main() {
@@ -44,7 +60,8 @@ fn Nav() -> Element {
     //let name = use_context::<Signal<NameHandler>>()().name;
     let mut name_handler = use_context::<Signal<NameHandler>>();
 
-    rsx!(div {
+    rsx!(
+        div {
         h2 {
             "Izberite opcijo:"
         }
@@ -70,6 +87,21 @@ fn Nav() -> Element {
                 to: "/Diagnostika",
                 "2) Diagnostika"
             }
+            Link{
+                class: "inputs",
+                to: "/Diagnostika/Basic",
+                "3) Osnovni pregled"
+            }
+                Link{
+                class: "inputs",
+                to: "/Diagnostika/Test",
+                "4) Testiranje"
+            }
+                Link{
+                class: "inputs",
+                to: "/Diagnostika/BIOS",
+                "5) BIOS"
+            }
         }
         div{
             class: "terminal-container",
@@ -86,10 +118,13 @@ fn Nav() -> Element {
                         
 
                         match option().as_str().to_uppercase().as_str() {
-                            "H" => {navigator().push(Route::Home{});},
-                            "U" => {navigator().push(Route::SpremeniIme{});},
-                            "1" => {navigator().push(Route::Napake{});},
-                            "2" => {navigator().push(Route::Diagnostika{});},
+                                "H" => {navigator().push(Route::Home{});},
+                                "U" => {navigator().push(Route::SpremeniIme{});},
+                                "1" => {navigator().push(Route::Napake{});},
+                                "2" => {navigator().push(Route::Diagnostika{});},
+                                "3" => {navigator().push(Route::BasicCheck{});},
+                                "4" => {navigator().push(Route::Testiranje{});},
+                                "5" => {navigator().push(Route::BIOS{});},
                             _ => {}
                         }
 
@@ -126,15 +161,21 @@ fn Intro() -> Element {
                 in vzdrževanja računalniških sistemov."
             }
         }
+        image{
+
+        }
     )
 }
 
 #[component]
 fn Home() -> Element {
-    rsx!(div{
+    const MB_IMG: ImageAsset = mg!(image("./assets/motherboard-cpu-computer-processor-preview.jpg"));
+    rsx!(
+        div{
         class:"width-limiter",
 
         Intro {}
+            img{src:"{MB_IMG}"}
         Nav {}
         }
     )
@@ -367,5 +408,112 @@ impl NameHandler {
             name: "user".to_string(),
             option: "".to_string(),
         }
+    }
+}
+
+
+
+
+fn BasicCheck() -> Element{
+    rsx!(div {
+        class: "width-limiter",
+
+        h1 { "Osnovni Pregled in Preverjanje Napajanja" }
+        p {
+            "Pred začetkom podrobnejše diagnostike je ključnega pomena, da se opravi osnovni pregled
+            in preverjanje napajanja. To vključuje naslednje korake:"
+        }
+        ul {
+            li {
+                b { "Vizualni Pregled: " }
+                "Preveri fizične poškodbe, kot so ožgani deli, izbočeni kondenzatorji,
+                korozija na komponentah ali poškodovani konektorji."
+            }
+            li {
+                b { "Preverjanje Povezav in Napajanja: " }
+                "Preveri, da so vsi kabli, vključno z napajalnimi in podatkovnimi,
+                pravilno priključeni. Za preizkus napajalnika uporabi multimeter
+                ali ga zamenjaj z znanim delujočim."
+            }
+            li {
+                b { "POST in Diagnostični Signali: " }
+                "Če ima matična plošča zvočnik, poslušaj za piske in preveri, kaj ti
+                pomenijo. Diagnostične LED lučke na plošči ti lahko tudi pomagajo pri
+                prepoznavanju napake."
+            }
+        }
+        Nav {}
+    })
+}
+
+#[component]
+fn Testiranje() -> Element{
+    rsx!(
+        div {
+    h1 { "Izolacija Komponent in Testiranje" }
+    p {
+        "Če osnovni pregled ne razkrije težave, je naslednji korak izolacija komponent
+        in testiranje sistema z minimalno konfiguracijo."
+    }
+    ul {
+        li {
+            b { "Odstranitev Nebistvenih Komponent: " }
+            "Odklopi vse, kar ni nujno za zagon sistema, kot so dodatne kartice,
+            trdi diski in zunanje naprave. Poskusi zagnati sistem samo s procesorjem,
+            enim RAM modulom in integrirano grafiko (če je na voljo)."
+        }
+        li {
+            b { "Preverjanje RAM-a: " }
+            "Preizkusi različne RAM module in jih vstavljaš v različne reže,
+            da izključiš možnost, da je okvarjen RAM krivec za težave."
+        }
+        li {
+            b { "Preizkus Zunaj Ohišja: " }
+            "Postavi matično ploščo na neprevodno površino (kot je karton) in
+            jo zaženi zunaj ohišja. Tako izključiš možnost kratkega stika z ohišjem."
+        }
+    }
+}
+        Nav{}
+    )
+}
+
+#[component]
+fn BIOS() -> Element{
+    rsx!(h1 { "Pregled BIOS-a in Posodobitev" }
+    p {
+        "Če lahko dostopaš do BIOS-a, lahko s tem pridobiš dodatne informacije o stanju
+        sistema in morebitnih težavah z zaznavanjem komponent."
+    }
+    ul {
+        li {
+            b { "Dostop do BIOS-a: " }
+            "Če sistem pride do BIOS-a, preveri, ali so vse komponente pravilno zaznane.
+            Preveri nastavitve in po potrebi ponastavi BIOS na privzete vrednosti."
+        }
+        li {
+            b { "Posodobitev BIOS-a: " }
+            "Če imaš težave z združljivostjo ali zaznavanjem komponent, preveri spletno
+            stran proizvajalca matične plošče za morebitne posodobitve BIOS-a. Posodobi,
+            če je na voljo novejša različica."
+        }
+    }
+        Nav {}
+    )
+}
+
+#[component]
+fn NapRedir() -> Element {
+    rsx! {
+        h1 { "Napake" }
+        Outlet::<Route> {}
+    }
+}
+
+#[component]
+fn DiagRedir() -> Element {
+    rsx! {
+        h1 { "Diagnostika" }
+        Outlet::<Route> {}
     }
 }

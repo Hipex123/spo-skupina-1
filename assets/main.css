@@ -24,9 +24,14 @@
     letter-spacing: 0; /* Make sure letters are tight */
     transform: scale(1); /* Optional, remove any browser default scaling */
     transform-origin: 0 0; /* Ensures scaling is done from the top-left */
+    max-width: 900px;
 }
 
 strong{
+    color: black;
+    background-color: white;
+}
+b{
     color: black;
     background-color: white;
 }
@@ -72,4 +77,13 @@ h2{
 
 .flex{
     display: flex;
+}
+
+img{
+    max-width: 500px;
+    border: 3px solid white;
+    box-shadow:
+        0 0 2px rgba(255, 255, 255, 0.5),  /* Soft inner glow */
+        0 0 4px rgba(255, 255, 255, 0.4),  /* Medium soft glow */
+        0 0 10px rgba(255, 255, 255, 0.3);  /* Subtle outer glow */;
 }
