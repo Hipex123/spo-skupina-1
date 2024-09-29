@@ -298,6 +298,7 @@ fn Diagnostika() ->  Element{
         div{
             class:"flex width-limiter",
             Jojo {}
+            Jojo {}
             div{
                 class:"left-spacer"
             }
