@@ -2,7 +2,8 @@
 
 use dioxus::prelude::*;
 use dioxus_logger::tracing::{info, Level};
-use web_sys::js_sys::Number;
+use rand::Rng;
+use rand::thread_rng;
 use manganis::*;
 
 #[derive(Clone, Routable, Debug, PartialEq)]
@@ -26,7 +27,7 @@ enum Route {
         #[route("/")]
         Diagnostika {},
         #[route("/Basic")]
-        BasicCheck{},
+        OsnovnoPregled{},
         #[route("/Test")]
         Testiranje{},
         #[route("/BIOS")]
@@ -38,6 +39,15 @@ enum Route {
     SpremeniIme {},
 
 }
+
+
+const IMAGES: [manganis::ImageAsset; 5] = [
+    mg!(image("./assets/meme-images/jotaro.jpg")),
+    mg!(image("./assets/meme-images/bucciarati.jpg")),
+    mg!(image("./assets/meme-images/kira.jpg")),
+    mg!(image("./assets/meme-images/wind.png")),
+    mg!(image("./assets/meme-images/josuke.jpg")),
+];
 
 fn main() {
     // Init logger
@@ -122,7 +132,7 @@ fn Nav() -> Element {
                                 "U" => {navigator().push(Route::SpremeniIme{});},
                                 "1" => {navigator().push(Route::Napake{});},
                                 "2" => {navigator().push(Route::Diagnostika{});},
-                                "3" => {navigator().push(Route::BasicCheck{});},
+                                "3" => {navigator().push(Route::OsnovnoPregled{});},
                                 "4" => {navigator().push(Route::Testiranje{});},
                                 "5" => {navigator().push(Route::BIOS{});},
                             _ => {}
@@ -169,13 +179,17 @@ fn Intro() -> Element {
 
 #[component]
 fn Home() -> Element {
-    const MB_IMG: ImageAsset = mg!(image("./assets/motherboard-cpu-computer-processor-preview.jpg"));
+    const MB_IMG: ImageAsset = mg!(image("./assets/images/motherboard-cpu-computer-processor-preview.jpg"));
+
+    
+
     rsx!(
         div{
         class:"width-limiter",
 
         Intro {}
             img{src:"{MB_IMG}"}
+            Jojo {}
         Nav {}
         }
     )
@@ -199,6 +213,8 @@ fn Napake() -> Element {
         div{
             class:"width-limiter",
             div {
+                Jojo {}
+                Jojo {}
                 h1 { "Možne težave z matično ploščo" }
 
                 ul {
@@ -281,6 +297,8 @@ fn Diagnostika() ->  Element{
     rsx!{
         div{
             class:"flex width-limiter",
+            Jojo {}
+            Jojo {}
             div{
                 class:"left-spacer"
             }
@@ -390,6 +408,7 @@ fn SpremeniIme() -> Element {
                 },
                 span {}
             }
+            Jojo {}
         }
         }
     )
@@ -412,12 +431,10 @@ impl NameHandler {
 }
 
 
-
-
-fn BasicCheck() -> Element{
+fn OsnovnoPregled() -> Element{
     rsx!(div {
         class: "width-limiter",
-
+        Jojo {}
         h1 { "Osnovni Pregled in Preverjanje Napajanja" }
         p {
             "Pred začetkom podrobnejše diagnostike je ključnega pomena, da se opravi osnovni pregled
@@ -450,6 +467,7 @@ fn BasicCheck() -> Element{
 fn Testiranje() -> Element{
     rsx!(
         div {
+            Jojo {}
     h1 { "Izolacija Komponent in Testiranje" }
     p {
         "Če osnovni pregled ne razkrije težave, je naslednji korak izolacija komponent
@@ -481,6 +499,7 @@ fn Testiranje() -> Element{
 #[component]
 fn BIOS() -> Element{
     rsx!(h1 { "Pregled BIOS-a in Posodobitev" }
+    Jojo {}
     p {
         "Če lahko dostopaš do BIOS-a, lahko s tem pridobiš dodatne informacije o stanju
         sistema in morebitnih težavah z zaznavanjem komponent."
@@ -516,4 +535,28 @@ fn DiagRedir() -> Element {
         h1 { "Diagnostika" }
         Outlet::<Route> {}
     }
+}
+
+fn get_random_image() -> &'static manganis::ImageAsset {
+    let mut rng = rand::thread_rng();
+    let index = rng.gen_range(0..IMAGES.len());
+    &IMAGES[index]
+}
+
+#[component]
+fn Jojo() -> Element {
+    let mut rng = rand::thread_rng();
+
+    let random_left: u32 = rng.gen_range(0..1601);
+    let random_top: u32 = rng.gen_range(0..601);
+
+    let meme_images_style = format!(r#"
+            margin-left: {random_left}px;
+            margin-top: {random_top}px;
+            opacity: 0.05;
+            border: none;
+            position: absolute;
+            box-shadow: none;
+        "#);
+    rsx!(img{src:"{get_random_image()}", style:"{meme_images_style}"})
 }
