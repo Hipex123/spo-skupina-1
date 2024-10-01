@@ -557,6 +557,7 @@ fn Jojo() -> Element {
             border: none;
             position: absolute;
             box-shadow: none;
+            z-index: 1                        
         "#);
     rsx!(img{src:"{get_random_image()}", style:"{meme_images_style}"})
 }
